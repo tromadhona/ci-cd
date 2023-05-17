@@ -11,6 +11,11 @@ router.get('/', (req, res) => {
         data: null
     });
 });
+
+router.get('/error', (req, res) => {
+    return res.status(200).json(data);
+});
+
 router.post('/auth/register', user.register);
 router.post('/auth/login', user.login);
 router.get('/auth/whoami', middlewares.auth, user.whoami);
