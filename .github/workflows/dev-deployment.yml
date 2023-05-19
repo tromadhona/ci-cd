@@ -5,25 +5,30 @@ on:
     branches: [develop]
 
 jobs:
-  deploy:
+  ci:
     runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-
-      - name: Use Node 16
-        uses: actions/setup-node@v1
-        with:
-          node-version: 16.x
-
-      - name: Install packages
-        run: npm install
-
-      - name: Install Railway
-        run: npm i -g @railway/cli
-
-      - name: Deploy
-        run: railway up
+    services:
+      postgres:
+        image: postgres:13.2
         env:
-          RAILWAY_TOKEN: ${{ secrets.RAILWAY_DEV_TOKEN }}
+          POSTGRES_PASSWORD: password
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v1
+        with:
+          node-version: 18.12.0
+      - run: npm install
+      - run: rm -rf .npmrc
+      - run: sequelize db:migrate
+        env:
+          DATABASE_URL: postgresql://postgres:password@localhost:5432/express_prisma_test?schema=public
+      - run: npm test
+        env:
+          DATABASE_URL: postgresql://postgres:password@localhost:5432/express_prisma_test?schema=public
