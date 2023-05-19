@@ -27,7 +27,7 @@ jobs:
       - run: npm install
       - run: npx sequelize db:migrate
         env:
-          DATABASE_URL: postgresql://postgres:password@localhost:5432/express_prisma_test?schema=public
+          DATABASE_URL: postgresql://postgres:password@localhost:5432/ci-cd?schema=public
       - run: npm test
         env:
-          DATABASE_URL: postgresql://postgres:password@localhost:5432/express_prisma_test?schema=public
+          DATABASE_URL: postgresql://postgres:password@localhost:5432/ci-cd?schema=public
