@@ -35,7 +35,6 @@ jobs:
           DB_NAME: ci-cd
           DB_USERNAME: postgres
           DB_PASSWORD: password
-          DB_PORT: 5432
       - name: Migrate database
         run: npx sequelize db:migrate
         env:
@@ -43,7 +42,6 @@ jobs:
           DB_NAME: ci-cd
           DB_USERNAME: postgres
           DB_PASSWORD: password
-          DB_PORT: 5432
       - name: Run test
         run: npm test
         env:
@@ -51,7 +49,6 @@ jobs:
           DB_NAME: ci-cd
           DB_USERNAME: postgres
           DB_PASSWORD: password
-          DB_PORT: 5432
           JWT_SECRET_KEY: rahasia
 
   cd:
@@ -64,6 +61,8 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: 18.12.0
+      - name: Install packages
+        run: npm install
       - name: Install Railway
         run: npm i -g @railway/cli
       - name: Deploy
